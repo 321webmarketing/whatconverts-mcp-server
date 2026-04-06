@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -9,11 +9,13 @@ import { z } from "zod";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const envPath = resolve(__dirname, "../.env");
-const envContent = readFileSync(envPath, "utf-8");
-for (const line of envContent.split("\n")) {
-  const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)\s*$/);
-  if (match && !process.env[match[1]]) {
-    process.env[match[1]] = match[2];
+if (existsSync(envPath)) {
+  const envContent = readFileSync(envPath, "utf-8");
+  for (const line of envContent.split("\n")) {
+    const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)\s*$/);
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2];
+    }
   }
 }
 
