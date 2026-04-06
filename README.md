@@ -104,8 +104,11 @@ Add to `~/.claude/settings.json`:
     "whatconverts": {
       "command": "docker",
       "args": [
-        "run", "--rm", "-i",
-        "--env-file", "/absolute/path/to/whatconverts-mcp-server/.env",
+        "run",
+        "--rm",
+        "-i",
+        "--env-file",
+        "/absolute/path/to/whatconverts-mcp-server/.env",
         "whatconverts-mcp-server"
       ]
     }
@@ -123,8 +126,11 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
     "whatconverts": {
       "command": "docker",
       "args": [
-        "run", "--rm", "-i",
-        "--env-file", "/absolute/path/to/whatconverts-mcp-server/.env",
+        "run",
+        "--rm",
+        "-i",
+        "--env-file",
+        "/absolute/path/to/whatconverts-mcp-server/.env",
         "whatconverts-mcp-server"
       ]
     }
