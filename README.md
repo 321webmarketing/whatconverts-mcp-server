@@ -47,13 +47,17 @@ If you prefer Docker, you can skip the Node.js install entirely.
 docker build -t whatconverts-mcp-server .
 ```
 
-2. Run it (pass your API credentials as environment variables):
+2. Create your `.env` file (if you haven't already):
 
 ```bash
-docker run --rm -i \
-  -e API_TOKEN=your-token-here \
-  -e API_SECRET=your-secret-here \
-  whatconverts-mcp-server
+cp .env.example .env
+# Edit .env with your API_TOKEN and API_SECRET
+```
+
+3. Run it (reads credentials from your `.env` file):
+
+```bash
+docker run --rm -i --env-file .env whatconverts-mcp-server
 ```
 
 See the [Configuration](#configuration) section below for how to wire this into Claude Code or Claude Desktop.
@@ -101,14 +105,9 @@ Add to `~/.claude/settings.json`:
       "command": "docker",
       "args": [
         "run", "--rm", "-i",
-        "-e", "API_TOKEN",
-        "-e", "API_SECRET",
+        "--env-file", "/absolute/path/to/whatconverts-mcp-server/.env",
         "whatconverts-mcp-server"
-      ],
-      "env": {
-        "API_TOKEN": "your-token-here",
-        "API_SECRET": "your-secret-here"
-      }
+      ]
     }
   }
 }
@@ -125,8 +124,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
       "command": "docker",
       "args": [
         "run", "--rm", "-i",
-        "-e", "API_TOKEN=your-token-here",
-        "-e", "API_SECRET=your-secret-here",
+        "--env-file", "/absolute/path/to/whatconverts-mcp-server/.env",
         "whatconverts-mcp-server"
       ]
     }
