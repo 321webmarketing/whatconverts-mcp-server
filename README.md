@@ -37,6 +37,27 @@ API_SECRET=your-secret-here
 npm run build
 ```
 
+## Docker Setup
+
+If you prefer Docker, you can skip the Node.js install entirely.
+
+1. Build the image:
+
+```bash
+docker build -t whatconverts-mcp-server .
+```
+
+2. Run it (pass your API credentials as environment variables):
+
+```bash
+docker run --rm -i \
+  -e API_TOKEN=your-token-here \
+  -e API_SECRET=your-secret-here \
+  whatconverts-mcp-server
+```
+
+See the [Configuration](#configuration) section below for how to wire this into Claude Code or Claude Desktop.
+
 ## Configuration
 
 ### Claude Code
@@ -64,6 +85,50 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
     "whatconverts": {
       "command": "node",
       "args": ["/absolute/path/to/whatconverts-mcp-server/dist/index.js"]
+    }
+  }
+}
+```
+
+### Claude Code (Docker)
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "whatconverts": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "API_TOKEN",
+        "-e", "API_SECRET",
+        "whatconverts-mcp-server"
+      ],
+      "env": {
+        "API_TOKEN": "your-token-here",
+        "API_SECRET": "your-secret-here"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop (Docker)
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS):
+
+```json
+{
+  "mcpServers": {
+    "whatconverts": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "API_TOKEN=your-token-here",
+        "-e", "API_SECRET=your-secret-here",
+        "whatconverts-mcp-server"
+      ]
     }
   }
 }
