@@ -47,16 +47,19 @@ async function apiRequest(
     }
   }
 
-  const options: RequestInit = {
-    method,
-    headers: {
-      Authorization: authHeader,
-      "Content-Type": "application/json",
-    },
-  };
+  const headers: Record<string, string> = { Authorization: authHeader };
+  const options: RequestInit = { method, headers };
 
-  if (body && (method === "POST" || method === "PUT")) {
-    options.body = JSON.stringify(body);
+  // WhatConverts write endpoints accept POST only, and read the updated
+  // fields from a form-encoded body — a JSON body returns 200 but is ignored.
+  if (body && method === "POST") {
+    const form = new URLSearchParams();
+    for (const [k, v] of Object.entries(body)) {
+      if (v === undefined || v === null || v === "") continue;
+      form.set(k, typeof v === "object" ? JSON.stringify(v) : String(v));
+    }
+    headers["Content-Type"] = "application/x-www-form-urlencoded";
+    options.body = form.toString();
   }
 
   const res = await fetch(url.toString(), options);
@@ -185,7 +188,12 @@ server.tool(
     first_name: z.string().optional().describe("First name"),
     last_name: z.string().optional().describe("Last name"),
     company: z.string().optional().describe("Company name"),
-    quotable: z.string().optional().describe("Quotable status"),
+    quotable: z
+      .enum(["yes", "no", "pending", "not_set"])
+      .optional()
+      .describe(
+        'Quotable status. Accepted values are lowercase: "yes", "no", "pending", "not_set" (the API echoes them back title-cased, e.g. "Yes")'
+      ),
     quote_value: z.number().optional().describe("Quote value"),
     sales_value: z.number().optional().describe("Sales value"),
     additional_fields: z
@@ -194,7 +202,7 @@ server.tool(
       .describe("Custom fields as key-value pairs"),
   },
   async ({ lead_id, ...body }) => {
-    const data = await apiRequest("PUT", `/leads/${lead_id}`, undefined, body);
+    const data = await apiRequest("POST", `/leads/${lead_id}`, undefined, body);
     return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
   }
 );
@@ -247,7 +255,7 @@ server.tool(
   },
   async ({ account_id, ...body }) => {
     const data = await apiRequest(
-      "PUT",
+      "POST",
       `/accounts/${account_id}`,
       undefined,
       body
@@ -318,7 +326,7 @@ server.tool(
   },
   async ({ profile_id, ...body }) => {
     const data = await apiRequest(
-      "PUT",
+      "POST",
       `/profiles/${profile_id}`,
       undefined,
       body
