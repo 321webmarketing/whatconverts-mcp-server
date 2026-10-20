@@ -148,7 +148,7 @@ Then restart Claude Code or Claude Desktop.
 | `list_leads` | List leads with filters (type, status, date range, source, etc.) |
 | `get_lead` | Get a single lead by ID |
 | `create_lead` | Create a new lead |
-| `update_lead` | Update an existing lead |
+| `update_lead` | Update an existing lead (quotable status, quote/sales value, spam/duplicate flags, notes, attribution, custom fields) |
 
 ### Accounts
 | Tool | Description |

@@ -119,7 +119,7 @@ server.tool(
     quotable: z.string().optional().describe("Filter by quotable status"),
     phone_number: z.string().optional().describe("Filter by phone number"),
     email_address: z.string().optional().describe("Filter by email"),
-    spam: z.string().optional().describe("Filter spam leads"),
+    spam: z.string().optional().describe('Filter spam leads: "true" or "false"'),
     duplicate: z.string().optional().describe("Filter duplicate leads"),
     lead_source: z.string().optional().describe("Filter by lead source"),
     lead_medium: z.string().optional().describe("Filter by lead medium"),
@@ -196,6 +196,22 @@ server.tool(
       ),
     quote_value: z.number().optional().describe("Quote value"),
     sales_value: z.number().optional().describe("Sales value"),
+    spam: z
+      .boolean()
+      .optional()
+      .describe("Mark the lead as spam (true) or not spam (false)"),
+    duplicate: z
+      .boolean()
+      .optional()
+      .describe("Mark the lead as a duplicate (true) or not a duplicate (false)"),
+    notes: z.string().optional().describe("Lead notes"),
+    lead_source: z.string().optional().describe("Lead source"),
+    lead_medium: z.string().optional().describe("Lead medium"),
+    lead_campaign: z.string().optional().describe("Lead campaign"),
+    lead_content: z.string().optional().describe("Lead content"),
+    lead_keyword: z.string().optional().describe("Lead keyword"),
+    lead_url: z.string().optional().describe("Lead URL"),
+    landing_url: z.string().optional().describe("Landing URL"),
     additional_fields: z
       .record(z.string(), z.string())
       .optional()
